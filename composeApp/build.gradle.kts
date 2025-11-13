@@ -1,20 +1,42 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.gradle.internal.extensions.stdlib.capitalized
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.ksp)
+    id("kotlin-parcelize")
 }
 
 kotlin {
+    ksp {
+        arg("circuit.codegen.mode", "kotlin_inject_anvil")
+        arg(
+            "kotlin-inject-anvil-contributing-annotations",
+            "com.slack.circuit.codegen.annotations.CircuitInject"
+        )
+    }
+
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
+            compilations.all {
+                compileTaskProvider.configure {
+                    compilerOptions {
+                        freeCompilerArgs.addAll(
+                            "-P",
+                            "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=cl.emilym.kmp.parcelable.Parcelize"
+                        )
+                    }
+                }
+            }
         }
     }
-    
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -24,7 +46,7 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
@@ -40,8 +62,19 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
+            // Kotlin Inject
+            implementation(libs.inject.kotlin.inject.runtime)
 
+            // Kotlin Inject Anvil
+            implementation(libs.anvil.runtime)
+            implementation(libs.anvil.runtime.optional)
+
+            // Circuit
             implementation(libs.circuit.foundation)
+            implementation(libs.circuit.codegen.annotations)
+
+
+            implementation(libs.parcelable)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -76,7 +109,43 @@ android {
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
+ksp {
+    arg("circuit.codegen.mode", "kotlin_inject_anvil")
+    arg(
+        "kotlin-inject-anvil-contributing-annotations",
+        "com.slack.circuit.codegen.annotations.CircuitInject"
+    )
 }
 
+dependencies {
+    debugImplementation(compose.uiTooling)
+    kspCommonMainMetadata(libs.kotlin.inject.compiler.ksp)
+    kspCommonMainMetadata(libs.circuit.codegen)
+    kspCommonMainMetadata(libs.anvil.compiler)
+}
+
+addKspDependencyForAllTargets(libs.kotlin.inject.compiler.ksp)
+addKspDependencyForAllTargets(libs.circuit.codegen)
+addKspDependencyForAllTargets(libs.anvil.compiler)
+
+
+// source: https://github.com/chrisbanes/tivi/tree/main
+private fun Project.addKspDependencyForAllTargets(
+    dependencyNotation: Any,
+) {
+    val kmpExtension = extensions.getByType<KotlinMultiplatformExtension>()
+    dependencies {
+        kmpExtension.targets
+            .asSequence()
+            .filter { target ->
+                // Don't add KSP for common target, only final platforms
+                target.platformType != KotlinPlatformType.common
+            }
+            .forEach { target ->
+                add(
+                    "ksp${target.targetName.capitalized()}",
+                    dependencyNotation,
+                )
+            }
+    }
+}
