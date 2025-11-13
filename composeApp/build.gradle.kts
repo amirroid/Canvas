@@ -22,7 +22,7 @@ kotlin {
                     compilerOptions {
                         freeCompilerArgs.addAll(
                             "-P",
-                            "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=cl.emilym.kmp.parcelable.Parcelize"
+                            "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=ir.amirroid.canvas.utils.annotations.CommonParcelize"
                         )
                     }
                 }
@@ -71,9 +71,6 @@ kotlin {
             // Room
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
-
-
-            implementation(libs.parcelable)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

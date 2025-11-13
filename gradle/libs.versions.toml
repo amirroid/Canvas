@@ -15,7 +15,6 @@ junit = "4.13.2"
 kotlin = "2.2.20"
 kotlinInjectRuntimeVersion = "0.8.0"
 ksp = "2.2.10-2.0.2"
-parcelable = "0.1.2"
 kotlin-anvil-inject = "0.1.6"
 room = "2.8.3"
 sqlite = "2.6.1"
@@ -36,7 +35,6 @@ androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "a
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
-parcelable = { module = "cl.emilym.kmp:parcelable", version.ref = "parcelable" }
 anvil-runtime = { module = "software.amazon.lastmile.kotlin.inject.anvil:runtime", version.ref = "kotlin-anvil-inject" }
 anvil-runtime-optional = { module = "software.amazon.lastmile.kotlin.inject.anvil:runtime-optional", version.ref = "kotlin-anvil-inject" }
 anvil-compiler = { module = "software.amazon.lastmile.kotlin.inject.anvil:compiler", version.ref = "kotlin-anvil-inject" }
