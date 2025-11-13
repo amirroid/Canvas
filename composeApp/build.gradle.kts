@@ -9,18 +9,11 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.androidxRoom)
     id("kotlin-parcelize")
 }
 
 kotlin {
-    ksp {
-        arg("circuit.codegen.mode", "kotlin_inject_anvil")
-        arg(
-            "kotlin-inject-anvil-contributing-annotations",
-            "com.slack.circuit.codegen.annotations.CircuitInject"
-        )
-    }
-
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
@@ -44,6 +37,7 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            linkerOpts.add("-lsqlite3")
         }
     }
 
@@ -72,6 +66,11 @@ kotlin {
             // Circuit
             implementation(libs.circuit.foundation)
             implementation(libs.circuit.codegen.annotations)
+
+
+            // Room
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
 
 
             implementation(libs.parcelable)
@@ -124,10 +123,14 @@ dependencies {
     kspCommonMainMetadata(libs.anvil.compiler)
 }
 
+room {
+    schemaDirectory("${projectDir.resolve("schemas")}")
+}
+
 addKspDependencyForAllTargets(libs.kotlin.inject.compiler.ksp)
 addKspDependencyForAllTargets(libs.circuit.codegen)
 addKspDependencyForAllTargets(libs.anvil.compiler)
-
+addKspDependencyForAllTargets(libs.androidx.room.compiler)
 
 // source: https://github.com/chrisbanes/tivi/tree/main
 private fun Project.addKspDependencyForAllTargets(

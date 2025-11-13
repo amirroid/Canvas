@@ -1,7 +1,6 @@
-package ir.amirroid.canvas
+package ir.amirroid.canvas.di
 
 import android.content.Context
-import ir.amirroid.canvas.di.AppComponent
 import me.tatarka.inject.annotations.Component
 import me.tatarka.inject.annotations.Provides
 import software.amazon.lastmile.kotlin.inject.anvil.AppScope
