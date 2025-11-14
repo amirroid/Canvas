@@ -9,6 +9,9 @@ import androidx.compose.runtime.setValue
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
+import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
+import io.github.vinceglb.filekit.name
+import io.github.vinceglb.filekit.path
 import ir.amirroid.canvas.domain.usecase.CreateNewPaintUseCase
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Assisted
@@ -29,6 +32,13 @@ class AddNewPaintPresenter @Inject constructor(
         var selectedFileName by rememberSaveable { mutableStateOf("") }
         val scope = rememberCoroutineScope()
 
+        val filePicker = rememberFileSaverLauncher { file ->
+            file?.let { file ->
+                selectedPath = file.path
+                selectedFileName = file.name
+            }
+        }
+
         return AddNewPaintScreen.State(
             name = name,
             selectedFileName = selectedFileName,
@@ -38,9 +48,11 @@ class AddNewPaintPresenter @Inject constructor(
                     name = event.name
                 }
 
-                is AddNewPaintScreen.Event.SelectFile -> {
-                    selectedPath = event.filePath
-                    selectedFileName = event.fileName
+                is AddNewPaintScreen.Event.OpenFilePicker -> {
+                    filePicker.launch(
+                        suggestedName = name.split(" ").joinToString(" "),
+                        extension = "json"
+                    )
                 }
 
                 is AddNewPaintScreen.Event.Back -> {

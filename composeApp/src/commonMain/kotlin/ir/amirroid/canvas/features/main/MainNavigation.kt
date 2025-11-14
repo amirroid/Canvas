@@ -4,12 +4,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.slack.circuit.backstack.BackStack
 import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.runtime.Navigator
+import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
 import ir.amirroid.canvas.ui.theme.CanvasTheme
 
 
@@ -30,7 +32,12 @@ fun <R : BackStack.Record> MainNavigation(
                 NavigableCircuitContent(
                     navigator = navigator,
                     backStack = backstack,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    decoratorFactory = remember(navigator) {
+                        GestureNavigationDecorationFactory(
+                            onBackInvoked = navigator::pop
+                        )
+                    }
                 )
             }
         }

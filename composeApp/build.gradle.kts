@@ -68,6 +68,7 @@ kotlin {
             // Circuit
             implementation(libs.circuit.foundation)
             implementation(libs.circuit.codegen.annotations)
+            implementation(libs.circuitx.gesture.navigation)
 
 
             // Room

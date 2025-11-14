@@ -17,8 +17,8 @@ data object AddNewPaintScreen : Screen {
 
     sealed interface Event : CircuitUiEvent {
         data object Back : Event
+        data object OpenFilePicker : Event
         data class ChangeName(val name: String) : Event
-        data class SelectFile(val filePath: String, val fileName: String) : Event
         data object Create : Event
     }
 }

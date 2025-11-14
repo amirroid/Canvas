@@ -45,12 +45,6 @@ class AddNewPaintUi : Ui<AddNewPaintScreen.State> {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddNewPaintContent(state: AddNewPaintScreen.State, modifier: Modifier = Modifier) {
-    val filePicker = rememberFileSaverLauncher { file ->
-        file?.let { file ->
-            state.eventSink.invoke(AddNewPaintScreen.Event.SelectFile(file.path, file.name))
-        }
-    }
-
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -90,10 +84,7 @@ fun AddNewPaintContent(state: AddNewPaintScreen.State, modifier: Modifier = Modi
             readOnly = true,
             trailingIcon = {
                 IconButton(onClick = {
-                    filePicker.launch(
-                        suggestedName = state.name.split(" ").joinToString(" "),
-                        extension = "json"
-                    )
+                    state.eventSink.invoke(AddNewPaintScreen.Event.OpenFilePicker)
                 }) {
                     Icon(
                         imageVector = Icons.Outlined.Folder,
