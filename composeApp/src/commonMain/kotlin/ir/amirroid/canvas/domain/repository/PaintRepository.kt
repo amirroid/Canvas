@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface PaintRepository {
     fun getAllPaints(): Flow<List<PaintItem>>
+    suspend fun addNewPaint(fileUri: String)
     fun getCanvasDocument(fileUri: String): CanvasDocument?
-    suspend fun addNewPaint(paint: PaintItem)
+    suspend fun saveCanvasDocument(fileUri: String, document: CanvasDocument)
+    fun takeFilePermission(fileUri: String)
 }

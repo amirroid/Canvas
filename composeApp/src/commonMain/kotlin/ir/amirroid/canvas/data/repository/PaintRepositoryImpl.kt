@@ -1,6 +1,7 @@
 package ir.amirroid.canvas.data.repository
 
 import ir.amirroid.canvas.data.database.dao.PaintDao
+import ir.amirroid.canvas.data.database.entity.PaintEntity
 import ir.amirroid.canvas.data.file.DocumentStorage
 import ir.amirroid.canvas.data.mappers.paint.toDomain
 import ir.amirroid.canvas.data.mappers.paint.toEntity
@@ -34,7 +35,23 @@ class PaintRepositoryImpl(
         }.getOrNull()
     }
 
-    override suspend fun addNewPaint(paint: PaintItem) {
-        dao.addNewPaint(paintEntity = paint.toEntity())
+    override suspend fun saveCanvasDocument(
+        fileUri: String,
+        document: CanvasDocument
+    ) {
+        val bytes = json.encodeToString(document).encodeToByteArray()
+        documentStorage.write(fileUri, bytes)
+    }
+
+    override fun takeFilePermission(fileUri: String) {
+        documentStorage.takePermission(fileUri)
+    }
+
+    override suspend fun addNewPaint(fileUri: String) {
+        dao.addNewPaint(
+            paintEntity = PaintEntity(
+                fileUri = fileUri
+            )
+        )
     }
 }

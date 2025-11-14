@@ -80,6 +80,10 @@ kotlin {
 
             // MaterialKolor
             implementation(libs.material.kolor)
+
+
+            // File Picker (To use directory picker)
+            implementation(libs.filekit.dialogs.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

@@ -1,6 +1,7 @@
 package ir.amirroid.canvas.data.file
 
 import android.content.Context
+import android.content.Intent
 import androidx.core.net.toUri
 import me.tatarka.inject.annotations.Inject
 import software.amazon.lastmile.kotlin.inject.anvil.AppScope
@@ -24,5 +25,12 @@ class AndroidDocumentStorage(private val context: Context) : DocumentStorage {
         val outputStream = context.contentResolver.openOutputStream(parsed, "rwt")
             ?: throw IllegalArgumentException("Cannot open OutputStream for URI: $uri")
         outputStream.use { it.write(content) }
+    }
+
+    override fun takePermission(uri: String) {
+        context.contentResolver.takePersistableUriPermission(
+            uri.toUri(),
+            Intent.FLAG_GRANT_READ_URI_PERMISSION.or(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        )
     }
 }

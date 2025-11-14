@@ -43,4 +43,8 @@ class IosDocumentStorage : DocumentStorage {
         val success = data.writeToURL(nsUrl, atomically = true)
         if (!success) throw IllegalArgumentException("Cannot write data to URL: $uri")
     }
+
+    override fun takePermission(uri: String) {
+        // no-op
+    }
 }

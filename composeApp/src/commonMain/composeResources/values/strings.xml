@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home">Home</string>
+    <string name="add_new_paint">New paint</string>
+    <string name="name">Name</string>
+    <string name="file">File</string>
+    <string name="create">Create</string>
+</resources>

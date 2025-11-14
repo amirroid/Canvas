@@ -14,8 +14,7 @@ import me.tatarka.inject.annotations.Inject
 import software.amazon.lastmile.kotlin.inject.anvil.AppScope
 
 @CircuitInject(HomeScreen::class, AppScope::class)
-@Inject
-class HomePresenter(
+class HomePresenter @Inject constructor(
     private val getAllPaintWithCanvasesUseCase: GetAllPaintWithCanvasesUseCase,
     @Assisted private val navigator: Navigator
 ) : Presenter<HomeScreen.State> {
