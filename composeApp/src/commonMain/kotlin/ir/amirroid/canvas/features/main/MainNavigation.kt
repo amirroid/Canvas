@@ -10,7 +10,7 @@ import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.rememberCircuitNavigator
-import ir.amirroid.canvas.features.home.circuit.HomeScreen
+import ir.amirroid.canvas.features.home.HomeScreen
 import ir.amirroid.canvas.ui.theme.CanvasTheme
 
 
