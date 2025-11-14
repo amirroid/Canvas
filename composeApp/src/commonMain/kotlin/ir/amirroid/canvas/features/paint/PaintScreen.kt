@@ -13,6 +13,8 @@ data class PaintScreen(val paintId: Long) : Screen {
         val eventSink: (Event) -> Unit
     ) : CircuitUiState {
         data object Loading : State({})
+
+        @Immutable
         data class Success(
             val paintWithCanvasDocument: PaintWithCanvasDocument,
             private val eventSinkI: (Event) -> Unit

@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,8 +15,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.Redo
+import androidx.compose.material.icons.automirrored.rounded.Undo
 import androidx.compose.material.icons.outlined.Circle
+import androidx.compose.material.icons.outlined.CleaningServices
 import androidx.compose.material.icons.outlined.Rectangle
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Draw
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -62,6 +67,10 @@ val canvasTypesWithIcons = listOf(
     CanvasTypeWithIcon(
         type = CanvasType.OVAL,
         icon = Icons.Outlined.Circle
+    ),
+    CanvasTypeWithIcon(
+        type = CanvasType.CLEAR,
+        icon = Icons.Outlined.CleaningServices
     ),
 )
 
@@ -125,25 +134,55 @@ fun PaintContent(state: PaintScreen.State.Success, modifier: Modifier = Modifier
         ) {
             Row(modifier = Modifier.fillMaxSize()) {
                 canvasTypesWithIcons.forEach { (type, icon) ->
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                            .clickable {
-                                paintState.currentCanvasType = type
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        val selected = paintState.currentCanvasType == type
-                        Icon(
-                            imageVector = icon,
-                            contentDescription = null,
-                            modifier = Modifier.alpha(if (selected) 1f else .6f)
-                        )
-                    }
+                    SectionIconButton(
+                        icon = icon,
+                        onClick = {
+                            paintState.currentCanvasType = type
+                        },
+                        selected = paintState.currentCanvasType == type
+                    )
                 }
+                SectionIconButton(
+                    icon = Icons.AutoMirrored.Rounded.Undo,
+                    onClick = paintState::undo,
+                    enabled = paintState.undoList.isNotEmpty()
+                )
+                SectionIconButton(
+                    icon = Icons.AutoMirrored.Rounded.Redo,
+                    onClick = paintState::redo,
+                    enabled = paintState.redoList.isNotEmpty()
+                )
+                SectionIconButton(
+                    icon = Icons.Rounded.Delete,
+                    onClick = paintState::clearAll,
+                    enabled = paintState.elements.isNotEmpty()
+                )
             }
         }
+    }
+}
+
+@Composable
+fun RowScope.SectionIconButton(
+    icon: ImageVector,
+    selected: Boolean = true,
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .weight(1f)
+            .fillMaxHeight()
+            .clickable(enabled = enabled) {
+                onClick.invoke()
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier = Modifier.alpha(if (!selected || !enabled) .6f else 1f)
+        )
     }
 }
 

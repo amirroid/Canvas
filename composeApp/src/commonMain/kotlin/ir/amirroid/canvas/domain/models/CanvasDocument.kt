@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import kotlinx.serialization.Serializable
 
 enum class CanvasType {
-    LINE, PATH, RECT, OVAL
+    LINE, PATH, RECT, OVAL, CLEAR
 }
 
 @Immutable
