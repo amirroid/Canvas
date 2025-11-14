@@ -71,7 +71,9 @@ fun HomeContent(state: HomeScreen.State, modifier: Modifier = Modifier) {
                 contentPadding = PaddingValues(12.dp)
             ) {
                 items(state.paints, key = { it.paint.id }) { paintWthDocument ->
-                    Card(modifier = Modifier.fillMaxWidth()) {
+                    Card(modifier = Modifier.fillMaxWidth(), onClick = {
+                        state.eventSink.invoke(HomeScreen.Event.ClickPaint(paintWthDocument.paint.id))
+                    }) {
                         Text(paintWthDocument.document.name, modifier = Modifier.padding(16.dp))
                     }
                 }

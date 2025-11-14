@@ -13,6 +13,9 @@ interface PaintDao {
     @Query("SELECT * FROM ${Constants.PAINT_ENTITY}")
     fun getAllPaints(): Flow<List<PaintEntity>>
 
+    @Query("SELECT * FROM ${Constants.PAINT_ENTITY} WHERE id = :id")
+    fun getPaint(id: Long): PaintEntity
+
     @Insert(onConflict = IGNORE)
     suspend fun addNewPaint(paintEntity: PaintEntity)
 }

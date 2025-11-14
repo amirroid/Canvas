@@ -6,8 +6,6 @@ import androidx.compose.material3.MotionScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.materialkolor.DynamicMaterialExpressiveTheme
-import com.materialkolor.PaletteStyle
-import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.rememberDynamicMaterialThemeState
 
 val SeedColor = Color(0xFFA1FF00)
@@ -20,8 +18,6 @@ fun CanvasTheme(
 ) {
     val dynamicThemeState = rememberDynamicMaterialThemeState(
         isDark = isDarkTheme,
-        style = PaletteStyle.Fidelity,
-        specVersion = ColorSpec.SpecVersion.SPEC_2025,
         seedColor = SeedColor,
     )
 

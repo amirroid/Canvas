@@ -28,6 +28,10 @@ class PaintRepositoryImpl(
         return dao.getAllPaints().map { entities -> entities.map { entity -> entity.toDomain() } }
     }
 
+    override suspend fun getPaint(paintId: Long): PaintItem {
+        return dao.getPaint(paintId).toDomain()
+    }
+
     override fun getCanvasDocument(fileUri: String): CanvasDocument? {
         return runCatching {
             val bytes = documentStorage.read(fileUri)

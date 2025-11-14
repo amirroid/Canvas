@@ -9,6 +9,7 @@ import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import ir.amirroid.canvas.domain.usecase.GetAllPaintWithCanvasesUseCase
 import ir.amirroid.canvas.features.add_paint.AddNewPaintScreen
+import ir.amirroid.canvas.features.paint.PaintScreen
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 import software.amazon.lastmile.kotlin.inject.anvil.AppScope
@@ -26,8 +27,12 @@ class HomePresenter @Inject constructor(
 
         return HomeScreen.State(paints = paints) { event ->
             when (event) {
-                HomeScreen.Event.NavigateToAddNewPaint -> {
+                is HomeScreen.Event.NavigateToAddNewPaint -> {
                     navigator.goTo(AddNewPaintScreen)
+                }
+
+                is HomeScreen.Event.ClickPaint -> {
+                    navigator.goTo(PaintScreen(event.paintId))
                 }
             }
         }

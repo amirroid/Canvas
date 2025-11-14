@@ -4,6 +4,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.SQLiteDriver
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import ir.amirroid.canvas.data.database.AppDatabase
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import me.tatarka.inject.annotations.Provides
@@ -20,8 +21,9 @@ interface DatabaseComponent {
     @SingleIn(AppScope::class)
     fun provideAppDatabase(
         builder: RoomDatabase.Builder<AppDatabase>,
-        driver: SQLiteDriver
-    ) = builder.setDriver(driver).setQueryCoroutineContext(Dispatchers.IO).build()
+        driver: SQLiteDriver,
+        dispatcher: CoroutineDispatcher
+    ) = builder.setDriver(driver).setQueryCoroutineContext(dispatcher).build()
 
     @Provides
     @SingleIn(AppScope::class)
