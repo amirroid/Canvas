@@ -7,5 +7,6 @@ import ir.amirroid.canvas.utils.Constants
 @Entity(tableName = Constants.PAINT_ENTITY)
 data class PaintEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0
+    val id: Long = 0,
+    val fileUri: String
 )

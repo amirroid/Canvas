@@ -10,6 +10,7 @@ import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.rememberCircuitNavigator
 import ir.amirroid.canvas.features.home.circuit.HomeScreen
 
+
 @Composable
 fun MainNavigation(circuit: Circuit) {
     val backstack = rememberSaveableBackStack(HomeScreen)

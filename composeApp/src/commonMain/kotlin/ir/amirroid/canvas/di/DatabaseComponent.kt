@@ -22,4 +22,8 @@ interface DatabaseComponent {
         builder: RoomDatabase.Builder<AppDatabase>,
         driver: SQLiteDriver
     ) = builder.setDriver(driver).setQueryCoroutineContext(Dispatchers.IO).build()
+
+    @Provides
+    @SingleIn(AppScope::class)
+    fun providePaintDao(database: AppDatabase) = database.paintDao()
 }
