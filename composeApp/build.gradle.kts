@@ -74,8 +74,11 @@ kotlin {
             implementation(libs.androidx.sqlite.bundled)
 
             // Kotlinx
-            implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0")
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+            implementation(libs.kotlinx.collections.immutable)
+            implementation(libs.kotlinx.serialization.json)
+
+            // MaterialKolor
+            implementation(libs.material.kolor)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
