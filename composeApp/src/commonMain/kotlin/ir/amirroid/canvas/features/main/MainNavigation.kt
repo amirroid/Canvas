@@ -5,20 +5,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.slack.circuit.backstack.rememberSaveableBackStack
+import com.slack.circuit.backstack.BackStack
 import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.NavigableCircuitContent
-import com.slack.circuit.foundation.rememberCircuitNavigator
-import ir.amirroid.canvas.features.home.HomeScreen
+import com.slack.circuit.runtime.Navigator
 import ir.amirroid.canvas.ui.theme.CanvasTheme
 
 
 @Composable
-fun MainNavigation(circuit: Circuit) {
-    val backstack = rememberSaveableBackStack(HomeScreen)
-    val navigator = rememberCircuitNavigator(backstack) {}
-
+fun <R : BackStack.Record> MainNavigation(
+    circuit: Circuit,
+    backstack: BackStack<R>,
+    navigator: Navigator
+) {
     CanvasTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,

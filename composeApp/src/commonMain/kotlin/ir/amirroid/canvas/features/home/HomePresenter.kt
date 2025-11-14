@@ -10,9 +10,11 @@ import com.slack.circuit.runtime.presenter.Presenter
 import ir.amirroid.canvas.domain.usecase.GetAllPaintWithCanvasesUseCase
 import ir.amirroid.canvas.features.add_paint.AddNewPaintScreen
 import me.tatarka.inject.annotations.Assisted
+import me.tatarka.inject.annotations.Inject
 import software.amazon.lastmile.kotlin.inject.anvil.AppScope
 
 @CircuitInject(HomeScreen::class, AppScope::class)
+@Inject
 class HomePresenter(
     private val getAllPaintWithCanvasesUseCase: GetAllPaintWithCanvasesUseCase,
     @Assisted private val navigator: Navigator
