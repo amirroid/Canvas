@@ -11,6 +11,7 @@ import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import ir.amirroid.canvas.domain.models.PaintWithCanvasDocument
 import ir.amirroid.canvas.domain.usecase.GetPaintWithCanvasDocumentUseCase
+import ir.amirroid.canvas.ui.components.paint.rememberRetainedPaintState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
@@ -29,6 +30,7 @@ class PaintPresenter @Inject constructor(
         var currentPaint by rememberRetained {
             mutableStateOf<Result<PaintWithCanvasDocument>?>(null)
         }
+        val paintState = rememberRetainedPaintState()
 
         LaunchedEffect(Unit) {
             if (currentPaint?.isSuccess == true) return@LaunchedEffect
@@ -43,6 +45,10 @@ class PaintPresenter @Inject constructor(
         val eventSink: (PaintScreen.Event) -> Unit = { event ->
             when (event) {
                 is PaintScreen.Event.Back -> navigator.pop()
+                is PaintScreen.Event.RedoCanvas -> paintState.redo()
+                is PaintScreen.Event.UndoCanvas -> paintState.undo()
+                is PaintScreen.Event.ClearCanvas -> paintState.clearAll()
+                is PaintScreen.Event.SetCanvasType -> paintState.currentCanvasType = event.type
             }
         }
 
@@ -50,6 +56,7 @@ class PaintPresenter @Inject constructor(
             currentPaint?.isSuccess == true -> {
                 PaintScreen.State.Success(
                     paintWithCanvasDocument = currentPaint!!.getOrThrow(),
+                    paintState = paintState,
                     eventSinkI = eventSink
                 )
             }

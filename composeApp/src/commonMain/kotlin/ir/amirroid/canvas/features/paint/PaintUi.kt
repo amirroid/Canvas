@@ -97,7 +97,8 @@ class PaintUi : Ui<PaintScreen.State> {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PaintContent(state: PaintScreen.State.Success, modifier: Modifier = Modifier) {
-    val paintState = rememberPaintState()
+    val paintState = state.paintState
+    val eventSink = state.eventSink
 
     Column(
         modifier = modifier
@@ -137,24 +138,24 @@ fun PaintContent(state: PaintScreen.State.Success, modifier: Modifier = Modifier
                     SectionIconButton(
                         icon = icon,
                         onClick = {
-                            paintState.currentCanvasType = type
+                            eventSink.invoke(PaintScreen.Event.SetCanvasType(type))
                         },
                         selected = paintState.currentCanvasType == type
                     )
                 }
                 SectionIconButton(
                     icon = Icons.AutoMirrored.Rounded.Undo,
-                    onClick = paintState::undo,
+                    onClick = { eventSink.invoke(PaintScreen.Event.UndoCanvas) },
                     enabled = paintState.undoList.isNotEmpty()
                 )
                 SectionIconButton(
                     icon = Icons.AutoMirrored.Rounded.Redo,
-                    onClick = paintState::redo,
+                    onClick = { eventSink.invoke(PaintScreen.Event.RedoCanvas) },
                     enabled = paintState.redoList.isNotEmpty()
                 )
                 SectionIconButton(
                     icon = Icons.Rounded.Delete,
-                    onClick = paintState::clearAll,
+                    onClick = { eventSink.invoke(PaintScreen.Event.ClearCanvas) },
                     enabled = paintState.elements.isNotEmpty()
                 )
             }

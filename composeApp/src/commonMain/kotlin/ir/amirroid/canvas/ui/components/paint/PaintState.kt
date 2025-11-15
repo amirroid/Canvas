@@ -12,6 +12,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.copy
+import com.slack.circuit.retained.rememberRetained
 import ir.amirroid.canvas.domain.models.CanvasType
 import kotlin.math.max
 import kotlin.math.min
@@ -169,6 +170,14 @@ class PaintState {
 @Composable
 fun rememberPaintState(): PaintState {
     return remember {
+        PaintState()
+    }
+}
+
+
+@Composable
+fun rememberRetainedPaintState(): PaintState {
+    return rememberRetained {
         PaintState()
     }
 }
