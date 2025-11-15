@@ -1,6 +1,7 @@
 package ir.amirroid.canvas.domain.models
 
 import androidx.compose.runtime.Immutable
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 enum class CanvasType {
@@ -17,6 +18,8 @@ data class CanvasDocument(
     @Serializable
     data class CanvasElement(
         val type: CanvasType,
-        val data: List<Double>
+        val data: List<Double>,
+        @SerialName("stroke_width")
+        val strokeWidth: Float
     )
 }

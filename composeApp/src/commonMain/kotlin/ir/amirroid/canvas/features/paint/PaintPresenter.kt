@@ -32,7 +32,7 @@ class PaintPresenter @Inject constructor(
         }
         val paintState = rememberRetainedPaintState()
 
-        LaunchedEffect(Unit) {
+        LaunchedEffect(paintScreen.paintId) {
             if (currentPaint?.isSuccess == true) return@LaunchedEffect
 
             withContext(Dispatchers.IO) {
@@ -49,6 +49,8 @@ class PaintPresenter @Inject constructor(
                 is PaintScreen.Event.UndoCanvas -> paintState.undo()
                 is PaintScreen.Event.ClearCanvas -> paintState.clearAll()
                 is PaintScreen.Event.SetCanvasType -> paintState.currentCanvasType = event.type
+                is PaintScreen.Event.HandleMotionEvent -> paintState.handleMotionEvent(event.motionEvent)
+                is PaintScreen.Event.InitPaintBoard -> paintState.initialize(event.boardSize)
             }
         }
 

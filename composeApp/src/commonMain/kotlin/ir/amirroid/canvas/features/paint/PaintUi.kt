@@ -36,7 +36,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.ui.Ui
 import ir.amirroid.canvas.domain.models.CanvasType
@@ -108,9 +110,7 @@ fun PaintContent(state: PaintScreen.State.Success, modifier: Modifier = Modifier
                 Text(state.paintWithCanvasDocument.document.name)
             },
             navigationIcon = {
-                IconButton(onClick = {
-                    state.eventSink.invoke(PaintScreen.Event.Back)
-                }) {
+                IconButton(onClick = { state.eventSink.invoke(PaintScreen.Event.Back) }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                         contentDescription = null
@@ -121,7 +121,12 @@ fun PaintContent(state: PaintScreen.State.Success, modifier: Modifier = Modifier
         Card(modifier = Modifier.weight(1f).padding(12.dp)) {
             PaintBoard(
                 state = paintState,
-                modifier = Modifier.fillMaxSize()
+                onMotionEvent = { state.eventSink.invoke(PaintScreen.Event.HandleMotionEvent(it)) },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .onSizeChanged {
+                        eventSink.invoke(PaintScreen.Event.InitPaintBoard(it.toSize()))
+                    }
             )
         }
         Card(

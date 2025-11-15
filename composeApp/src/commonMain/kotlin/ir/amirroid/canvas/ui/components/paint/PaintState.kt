@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.copy
 import com.slack.circuit.retained.rememberRetained
@@ -43,14 +44,26 @@ sealed class MotionEvent(
 @Stable
 class PaintState {
     var currentElement by mutableStateOf<CanvasPathElement?>(null)
+        private set
     var elements = mutableStateListOf<CanvasPathElement>()
+        private set
 
     var undoList = mutableStateListOf<UndoRedoEntry>()
+        private set
     var redoList = mutableStateListOf<UndoRedoEntry>()
+        private set
 
     var currentCanvasType by mutableStateOf(CanvasType.PATH)
     var previewsPosition: Offset? = null
 
+    var isInitialized by mutableStateOf(false)
+    private var boardSize = Size.Zero
+
+
+    fun initialize(boardSize: Size) {
+        this.boardSize = boardSize
+        isInitialized = true
+    }
 
     fun redo() {
         val lastItem = redoList.removeLastOrNull() ?: return
