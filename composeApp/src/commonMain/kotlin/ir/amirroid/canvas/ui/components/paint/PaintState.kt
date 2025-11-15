@@ -57,12 +57,18 @@ class PaintState {
     var previewsPosition: Offset? = null
 
     var isInitialized by mutableStateOf(false)
-    private var boardSize = Size.Zero
+    var boardSize = Size.Zero
+        private set
 
 
-    fun initialize(boardSize: Size) {
+    fun initializeBoard(boardSize: Size) {
         this.boardSize = boardSize
         isInitialized = true
+    }
+
+
+    fun initializeElements(newElements: List<CanvasPathElement>) {
+        elements += newElements
     }
 
     fun redo() {

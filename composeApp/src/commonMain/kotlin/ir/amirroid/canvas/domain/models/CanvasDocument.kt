@@ -18,8 +18,19 @@ data class CanvasDocument(
     @Serializable
     data class CanvasElement(
         val type: CanvasType,
-        val data: List<Double>,
+        val path: CompactPath,
         @SerialName("stroke_width")
         val strokeWidth: Float
-    )
+    ) {
+        @Serializable
+        @Immutable
+        data class CompactPath(val coordinates: List<Coordinate>) {
+            @Serializable
+            @Immutable
+            data class Coordinate(
+                val x: Float,
+                val y: Float
+            )
+        }
+    }
 }

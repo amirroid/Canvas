@@ -34,5 +34,6 @@ data class PaintScreen(val paintId: Long) : Screen {
         data object UndoCanvas : Event
         data object RedoCanvas : Event
         data object ClearCanvas : Event
+        data object SaveCanvasAndBack : Event
     }
 }

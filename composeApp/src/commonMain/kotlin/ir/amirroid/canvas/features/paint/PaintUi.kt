@@ -22,6 +22,8 @@ import androidx.compose.material.icons.outlined.CleaningServices
 import androidx.compose.material.icons.outlined.Rectangle
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Draw
+import androidx.compose.material.icons.rounded.Save
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,21 +32,35 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import canvas.composeapp.generated.resources.Res
+import canvas.composeapp.generated.resources.discard
+import canvas.composeapp.generated.resources.save
+import canvas.composeapp.generated.resources.save_changes_title
 import com.slack.circuit.codegen.annotations.CircuitInject
+import com.slack.circuit.overlay.ContentWithOverlays
+import com.slack.circuit.overlay.LocalOverlayHost
+import com.slack.circuit.overlay.OverlayHost
 import com.slack.circuit.runtime.ui.Ui
+import com.slack.circuitx.overlays.DialogResult
+import com.slack.circuitx.overlays.alertDialogOverlay
 import ir.amirroid.canvas.domain.models.CanvasType
+import ir.amirroid.canvas.ui.components.BackHandler
 import ir.amirroid.canvas.ui.components.paint.PaintBoard
-import ir.amirroid.canvas.ui.components.paint.rememberPaintState
 import ir.amirroid.canvas.ui.icons.LineIcon
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import software.amazon.lastmile.kotlin.inject.anvil.AppScope
 
 @Immutable
@@ -83,36 +99,64 @@ class PaintUi : Ui<PaintScreen.State> {
         state: PaintScreen.State,
         modifier: Modifier
     ) {
-        when (state) {
-            is PaintScreen.State.Loading -> {
-                PaintLoadingContent(modifier)
-            }
-
-            is PaintScreen.State.Success -> {
+        ContentWithOverlays {
+            if (state is PaintScreen.State.Success) {
                 PaintContent(state, modifier)
+            }
+            if (state is PaintScreen.State.Loading || (state is PaintScreen.State.Success && state.paintState.isInitialized.not())) {
+                PaintLoadingContent()
             }
         }
     }
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun PaintContent(state: PaintScreen.State.Success, modifier: Modifier = Modifier) {
     val paintState = state.paintState
     val eventSink = state.eventSink
 
-    Column(
-        modifier = modifier
-    ) {
+
+    val overlayHost = LocalOverlayHost.current
+    val scope = rememberCoroutineScope()
+
+
+    fun back() {
+        if (paintState.undoList.isNotEmpty()) {
+            scope.launch {
+                val result = overlayHost.showSaveDiscardDialog()
+                if (result == DialogResult.Confirm) {
+                    eventSink.invoke(PaintScreen.Event.SaveCanvasAndBack)
+                } else {
+                    state.eventSink.invoke(PaintScreen.Event.Back)
+                }
+            }
+        } else state.eventSink.invoke(PaintScreen.Event.Back)
+    }
+
+    BackHandler { back() }
+
+
+    Column(modifier = modifier) {
         CenterAlignedTopAppBar(
             title = {
                 Text(state.paintWithCanvasDocument.document.name)
             },
             navigationIcon = {
-                IconButton(onClick = { state.eventSink.invoke(PaintScreen.Event.Back) }) {
+                IconButton(onClick = ::back) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                        contentDescription = null
+                    )
+                }
+            },
+            actions = {
+                IconButton(onClick = {
+                    eventSink.invoke(PaintScreen.Event.SaveCanvasAndBack)
+                }, enabled = paintState.undoList.isNotEmpty()) {
+                    Icon(
+                        imageVector = Icons.Rounded.Save,
                         contentDescription = null
                     )
                 }
@@ -194,8 +238,25 @@ fun RowScope.SectionIconButton(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun PaintLoadingContent(modifier: Modifier = Modifier) {
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+fun PaintLoadingContent() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         LoadingIndicator(modifier = Modifier.size(88.dp))
     }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+suspend fun OverlayHost.showSaveDiscardDialog(): DialogResult {
+    return show(
+        alertDialogOverlay(
+            title = { Text(stringResource(Res.string.save_changes_title)) },
+            confirmButton = { onClick ->
+                Button(onClick = onClick) { Text(stringResource(Res.string.save)) }
+            },
+
+            dismissButton = { onClick ->
+                TextButton(onClick = onClick) { Text(stringResource(Res.string.discard)) }
+            },
+        )
+    )
 }

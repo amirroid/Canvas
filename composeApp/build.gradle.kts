@@ -69,6 +69,8 @@ kotlin {
             implementation(libs.circuit.foundation)
             implementation(libs.circuit.codegen.annotations)
             implementation(libs.circuitx.gesture.navigation)
+            implementation(libs.circuit.overlay)
+            implementation(libs.circuitx.overlay)
 
 
             // Room
