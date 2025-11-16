@@ -7,6 +7,6 @@ import ir.amirroid.canvas.ui.mapper.path.toCompactDomainPath
 
 fun CanvasPathElement.toDocumentDomainElement(boardSize: Size) = CanvasDocument.CanvasElement(
     type = type,
-    path = path.toCompactDomainPath(boardSize),
+    path = toCompactDomainPath(boardSize),
     strokeWidth = strokeWidth
 )

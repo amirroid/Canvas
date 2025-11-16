@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.copy
 import com.slack.circuit.retained.rememberRetained
 import ir.amirroid.canvas.domain.models.CanvasType
+import ir.amirroid.canvas.utils.extensions.sortedByPosition
 import kotlin.math.max
 import kotlin.math.min
 
@@ -106,7 +107,7 @@ class PaintState {
                 previewsPosition = event.asOffset()
                 currentElement = Path().apply {
                     moveTo(event.x, event.y)
-                }.createElement()
+                }.createElement(listOf(event.asOffset()))
             }
 
             is MotionEvent.Up -> {
@@ -134,19 +135,22 @@ class PaintState {
                 currentElement = Path().apply {
                     moveTo(previewsPosition!!.x, previewsPosition!!.y)
                     lineTo(event.x, event.y)
-                }.createElement()
+                }
+                    .createElement(points = currentElement!!.points + event.asOffset())
             }
 
             CanvasType.OVAL -> {
                 currentElement = Path().apply {
                     addOval(getEventRect(event))
-                }.createElement()
+                }
+                    .createElement(points = (currentElement!!.points + event.asOffset()).sortedByPosition())
             }
 
             CanvasType.RECT -> {
                 currentElement = Path().apply {
                     addRect(getEventRect(event))
-                }.createElement()
+                }
+                    .createElement(points = (currentElement!!.points + event.asOffset()).sortedByPosition())
             }
 
             CanvasType.PATH, CanvasType.CLEAR -> {
@@ -169,9 +173,10 @@ class PaintState {
         }
     }
 
-    private fun Path.createElement() = CanvasPathElement(
+    private fun Path.createElement(points: List<Offset> = emptyList()) = CanvasPathElement(
         type = currentCanvasType,
-        path = this
+        path = this,
+        points = points
     )
 
     private fun getEventRect(event: MotionEvent): Rect {

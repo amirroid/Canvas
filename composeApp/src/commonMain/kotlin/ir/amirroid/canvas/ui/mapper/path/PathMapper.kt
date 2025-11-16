@@ -4,17 +4,31 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathMeasure
 import ir.amirroid.canvas.domain.models.CanvasDocument
+import ir.amirroid.canvas.domain.models.CanvasType
+import ir.amirroid.canvas.ui.components.paint.CanvasPathElement
 import kotlin.math.min
 
-fun Path.toCompactDomainPath(
+fun CanvasPathElement.toCompactDomainPath(
+    boardSize: Size,
+): CanvasDocument.CanvasElement.CompactPath {
+    return when (type) {
+        CanvasType.PATH, CanvasType.CLEAR -> path.encodeAsCompactPath(boardSize)
+        else -> CanvasDocument.CanvasElement.CompactPath(
+            coordinates = points.map { (x, y) ->
+                CanvasDocument.CanvasElement.CompactPath.Coordinate(x, y)
+            }
+        )
+    }
+}
+
+private fun Path.encodeAsCompactPath(
     boardSize: Size,
     maxSampling: Int = 500
 ): CanvasDocument.CanvasElement.CompactPath {
-
     val coords = mutableListOf<CanvasDocument.CanvasElement.CompactPath.Coordinate>()
 
     val measure = PathMeasure().apply {
-        setPath(this@toCompactDomainPath, false)
+        setPath(this@encodeAsCompactPath, false)
     }
     val length = measure.length
 
