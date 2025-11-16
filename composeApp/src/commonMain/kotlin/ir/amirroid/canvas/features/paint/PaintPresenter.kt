@@ -13,6 +13,7 @@ import com.slack.circuit.runtime.presenter.Presenter
 import ir.amirroid.canvas.domain.models.PaintWithCanvasDocument
 import ir.amirroid.canvas.domain.usecase.GetPaintWithCanvasDocumentUseCase
 import ir.amirroid.canvas.domain.usecase.SaveCanvasDocumentUseCase
+import ir.amirroid.canvas.effects.RetainedLaunchedEffect
 import ir.amirroid.canvas.ui.components.paint.rememberRetainedPaintState
 import ir.amirroid.canvas.ui.mapper.element.toCanvasUiElement
 import ir.amirroid.canvas.ui.mapper.element.toDocumentDomainElement
@@ -70,8 +71,9 @@ class PaintPresenter @Inject constructor(
             }
         }
 
-        LaunchedEffect(paintState.isInitialized, currentPaint) {
-            if (paintState.isInitialized.not()) return@LaunchedEffect
+        RetainedLaunchedEffect(paintState.isInitialized, currentPaint) {
+            if (paintState.isInitialized.not()) return@RetainedLaunchedEffect
+
             currentPaint?.onSuccess { (_, document) ->
                 paintState.initializeElements(
                     newElements = document.elements.map { element ->
