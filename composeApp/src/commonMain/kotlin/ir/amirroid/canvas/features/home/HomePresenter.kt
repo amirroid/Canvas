@@ -1,6 +1,7 @@
 package ir.amirroid.canvas.features.home
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -14,13 +15,11 @@ import com.slack.circuit.runtime.presenter.Presenter
 import ir.amirroid.canvas.domain.models.CanvasDocument
 import ir.amirroid.canvas.domain.usecase.GetAllPaintWithCanvasesUseCase
 import ir.amirroid.canvas.domain.usecase.GetPaintWithCanvasDocumentUseCase
-import ir.amirroid.canvas.effects.RetainedLaunchedEffect
 import ir.amirroid.canvas.features.add_paint.AddNewPaintScreen
 import ir.amirroid.canvas.features.paint.PaintScreen
 import ir.amirroid.canvas.ui.components.paint.PaintState
 import ir.amirroid.canvas.ui.mapper.element.toCanvasUiElement
 import ir.amirroid.canvas.ui.mapper.paint_with_canvas.toLoadingUiModel
-import ir.amirroid.canvas.ui.mapper.paint_with_canvas.toUiModel
 import ir.amirroid.canvas.ui.models.CanvasLoadState
 import ir.amirroid.canvas.ui.models.PaintWithCanvasUiModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -56,7 +55,10 @@ class HomePresenter @Inject constructor(
                             documents[paint.id] = document
                             paints = paints.map { paintWithCanvas ->
                                 if (paintWithCanvas.paint.id == paint.id) {
-                                    paintWithCanvas.copy(canvas = CanvasLoadState.Loading)
+                                    paintWithCanvas.copy(
+                                        canvas = CanvasLoadState.Loading,
+                                        board = document.board
+                                    )
                                 } else paintWithCanvas
                             }
                         }
@@ -64,7 +66,7 @@ class HomePresenter @Inject constructor(
             }
         }
 
-        RetainedLaunchedEffect {
+        LaunchedEffect(Unit) {
             getAllPaintWithCanvasesUseCase()
                 .collectLatest { newPaints ->
                     paints = newPaints.map { item ->
@@ -76,8 +78,9 @@ class HomePresenter @Inject constructor(
                         when (previewsItem.canvas) {
                             is CanvasLoadState.Loading -> item.toLoadingUiModel()
                             is CanvasLoadState.Ready -> {
-                                val boardSize = previewsItem.canvas.paintState.boardSize
-                                item.toUiModel(canvas = getReadyCanvas(boardSize, item.document))
+//                                val boardSize = previewsItem.canvas.paintState.boardSize
+//                                item.toUiModel(canvas = getReadyCanvas(boardSize, item.document))
+                                previewsItem
                             }
                         }
                     }
