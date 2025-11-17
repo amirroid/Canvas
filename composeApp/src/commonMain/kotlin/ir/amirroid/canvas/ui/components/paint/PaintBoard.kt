@@ -20,7 +20,7 @@ import ir.amirroid.canvas.domain.models.CanvasType
 @Composable
 fun PaintBoard(
     state: PaintState,
-    onMotionEvent: (MotionEvent) -> Unit,
+    onMotionEvent: ((MotionEvent) -> Unit)? = null,
     modifier: Modifier = Modifier,
     gesturesEnabled: Boolean = true
 ) {
@@ -32,11 +32,11 @@ fun PaintBoard(
             .pointerInput(gesturesEnabled) {
                 if (!gesturesEnabled) return@pointerInput
                 detectDragGestures(onDragEnd = {
-                    onMotionEvent(MotionEvent.Up)
+                    onMotionEvent!!.invoke(MotionEvent.Up)
                 }, onDragStart = {
-                    onMotionEvent(MotionEvent.Down(it))
+                    onMotionEvent!!.invoke(MotionEvent.Down(it))
                 }) { change, _ ->
-                    onMotionEvent(MotionEvent.Drag(change.position))
+                    onMotionEvent!!.invoke(MotionEvent.Drag(change.position))
                     change.consume()
                 }
             }

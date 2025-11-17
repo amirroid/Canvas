@@ -11,7 +11,7 @@ import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.runtime.Navigator
-import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
+//import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
 import ir.amirroid.canvas.ui.theme.CanvasTheme
 
 
@@ -33,11 +33,11 @@ fun <R : BackStack.Record> MainNavigation(
                     navigator = navigator,
                     backStack = backstack,
                     modifier = Modifier.fillMaxSize(),
-                    decoratorFactory = remember(navigator) {
-                        GestureNavigationDecorationFactory(
-                            onBackInvoked = navigator::pop
-                        )
-                    }
+//                    decoratorFactory = remember(navigator) {
+//                        GestureNavigationDecorationFactory(
+//                            onBackInvoked = navigator::pop
+//                        )
+//                    }
                 )
             }
         }

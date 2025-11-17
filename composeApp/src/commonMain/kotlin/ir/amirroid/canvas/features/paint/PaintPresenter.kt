@@ -10,6 +10,7 @@ import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
+import ir.amirroid.canvas.domain.models.Board
 import ir.amirroid.canvas.domain.models.PaintWithCanvasDocument
 import ir.amirroid.canvas.domain.usecase.GetPaintWithCanvasDocumentUseCase
 import ir.amirroid.canvas.domain.usecase.SaveCanvasDocumentUseCase
@@ -18,6 +19,7 @@ import ir.amirroid.canvas.ui.components.paint.rememberRetainedPaintState
 import ir.amirroid.canvas.ui.mapper.element.toCanvasUiElement
 import ir.amirroid.canvas.ui.mapper.element.toDocumentDomainElement
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.tatarka.inject.annotations.Assisted
@@ -42,7 +44,6 @@ class PaintPresenter @Inject constructor(
         }
         val paintState = rememberRetainedPaintState()
 
-
         fun saveCanvasAndBack() {
             currentPaint?.getOrNull()?.let { (paint, document) ->
                 scope.launch(dispatcher) {
@@ -53,10 +54,18 @@ class PaintPresenter @Inject constructor(
                                 it.toDocumentDomainElement(
                                     paintState.boardSize
                                 )
-                            }
+                            },
+                            board = Board(paintState.boardSize.width, paintState.boardSize.height)
                         )
                     )
-                    navigator.pop()
+                    withContext(Dispatchers.Main) {
+                        navigator.pop(
+                            PaintScreen.Result(
+                                isEdited = true,
+                                paintId = paintScreen.paintId
+                            )
+                        )
+                    }
                 }
             }
         }
@@ -85,7 +94,13 @@ class PaintPresenter @Inject constructor(
 
         val eventSink: (PaintScreen.Event) -> Unit = { event ->
             when (event) {
-                is PaintScreen.Event.Back -> navigator.pop()
+                is PaintScreen.Event.Back -> navigator.pop(
+                    PaintScreen.Result(
+                        isEdited = false,
+                        paintId = paintScreen.paintId
+                    )
+                )
+
                 is PaintScreen.Event.RedoCanvas -> paintState.redo()
                 is PaintScreen.Event.UndoCanvas -> paintState.undo()
                 is PaintScreen.Event.ClearCanvas -> paintState.clearAll()

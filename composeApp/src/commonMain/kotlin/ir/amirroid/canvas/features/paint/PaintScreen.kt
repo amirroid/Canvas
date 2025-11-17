@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.geometry.Size
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
+import com.slack.circuit.runtime.screen.PopResult
 import com.slack.circuit.runtime.screen.Screen
 import ir.amirroid.canvas.domain.models.CanvasType
 import ir.amirroid.canvas.domain.models.PaintWithCanvasDocument
@@ -36,4 +37,7 @@ data class PaintScreen(val paintId: Long) : Screen {
         data object ClearCanvas : Event
         data object SaveCanvasAndBack : Event
     }
+
+    @CommonParcelize
+    data class Result(val isEdited: Boolean, val paintId: Long) : PopResult
 }

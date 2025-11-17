@@ -12,7 +12,8 @@ enum class CanvasType {
 @Serializable
 data class CanvasDocument(
     val name: String,
-    val elements: List<CanvasElement>
+    val elements: List<CanvasElement>,
+    val board: Board = Board(1f, 1f)
 ) {
     @Immutable
     @Serializable
