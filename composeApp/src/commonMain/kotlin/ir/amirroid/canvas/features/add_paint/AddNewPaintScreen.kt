@@ -12,6 +12,7 @@ data object AddNewPaintScreen : Screen {
     data class State(
         val name: String,
         val selectedFileName: String,
+        val isAddNewButtonEnabled: Boolean,
         val eventSink: (Event) -> Unit
     ) : CircuitUiState
 

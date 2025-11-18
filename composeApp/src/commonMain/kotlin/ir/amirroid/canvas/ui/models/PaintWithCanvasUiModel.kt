@@ -1,11 +1,11 @@
 package ir.amirroid.canvas.ui.models
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import ir.amirroid.canvas.domain.models.Board
 import ir.amirroid.canvas.domain.models.PaintItem
 import ir.amirroid.canvas.ui.components.paint.PaintState
 
-@Immutable
+@Stable
 data class PaintWithCanvasUiModel(
     val paint: PaintItem,
     val canvasName: String,
@@ -16,6 +16,6 @@ data class PaintWithCanvasUiModel(
 sealed interface CanvasLoadState {
     data object Loading : CanvasLoadState
 
-    @Immutable
+    @Stable
     data class Ready(val paintState: PaintState) : CanvasLoadState
 }

@@ -61,7 +61,6 @@ class PaintState {
     var boardSize = Size.Zero
         private set
 
-
     fun initializeBoard(boardSize: Size) {
         this.boardSize = boardSize
         isInitialized = true

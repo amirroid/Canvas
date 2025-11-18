@@ -253,7 +253,6 @@ suspend fun OverlayHost.showSaveDiscardDialog(): DialogResult {
             confirmButton = { onClick ->
                 Button(onClick = onClick) { Text(stringResource(Res.string.save)) }
             },
-
             dismissButton = { onClick ->
                 TextButton(onClick = onClick) { Text(stringResource(Res.string.discard)) }
             },

@@ -11,11 +11,14 @@ import ir.amirroid.canvas.di.create
 import ir.amirroid.canvas.features.home.HomeScreen
 import ir.amirroid.canvas.features.main.MainNavigation
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         val appComponent = AndroidAppComponent::class.create(applicationContext)
+
+
 
         setContent {
             val backstack = rememberSaveableBackStack(HomeScreen)
@@ -26,6 +29,7 @@ class MainActivity : ComponentActivity() {
                 backstack = backstack,
                 navigator = navigator
             )
+
         }
     }
 }

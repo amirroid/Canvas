@@ -10,7 +10,7 @@ import ir.amirroid.canvas.utils.annotations.CommonParcelize
 
 @CommonParcelize
 data object HomeScreen : Screen {
-//    @Immutable
+    @Immutable
     data class State(
         val paints: List<PaintWithCanvasUiModel>,
         val eventSink: (Event) -> Unit

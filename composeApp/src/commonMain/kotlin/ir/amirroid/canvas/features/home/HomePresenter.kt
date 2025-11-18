@@ -33,7 +33,7 @@ import software.amazon.lastmile.kotlin.inject.anvil.AppScope
 class HomePresenter @Inject constructor(
     private val getAllPaintWithCanvasesUseCase: GetAllPaintWithCanvasesUseCase,
     private val getPaintWithCanvasDocumentUseCase: GetPaintWithCanvasDocumentUseCase,
-    private val dispathcer: CoroutineDispatcher,
+    private val dispatcher: CoroutineDispatcher,
     @Assisted private val navigator: Navigator
 ) : Presenter<HomeScreen.State> {
     @Composable
@@ -49,7 +49,7 @@ class HomePresenter @Inject constructor(
 
         val paintNavigator = rememberAnsweringNavigator<PaintScreen.Result>(navigator) { result ->
             if (result.isEdited) {
-                scope.launch(dispathcer) {
+                scope.launch(dispatcher) {
                     getPaintWithCanvasDocumentUseCase.invoke(result.paintId)
                         ?.let { (paint, document) ->
                             documents[paint.id] = document

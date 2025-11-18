@@ -1,8 +1,10 @@
 package ir.amirroid.canvas.features.add_paint
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -30,6 +32,10 @@ class AddNewPaintPresenter @Inject constructor(
         var name by rememberSaveable { mutableStateOf("") }
         var selectedPath by rememberSaveable { mutableStateOf("") }
         var selectedFileName by rememberSaveable { mutableStateOf("") }
+        val isAddNewButtonEnabled by remember {
+            derivedStateOf { selectedPath.isNotEmpty() && name.isNotEmpty() }
+        }
+
         val scope = rememberCoroutineScope()
 
         val filePicker = rememberFileSaverLauncher { file ->
@@ -42,6 +48,7 @@ class AddNewPaintPresenter @Inject constructor(
         return AddNewPaintScreen.State(
             name = name,
             selectedFileName = selectedFileName,
+            isAddNewButtonEnabled = isAddNewButtonEnabled
         ) { event ->
             when (event) {
                 is AddNewPaintScreen.Event.ChangeName -> {

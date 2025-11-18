@@ -98,6 +98,7 @@ fun AddNewPaintContent(state: AddNewPaintScreen.State, modifier: Modifier = Modi
                 state.eventSink.invoke(AddNewPaintScreen.Event.Create)
             },
             modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+            enabled = state.isAddNewButtonEnabled
         ) {
             Text(stringResource(Res.string.create))
         }
