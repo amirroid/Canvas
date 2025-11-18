@@ -16,20 +16,19 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
         val appComponent = AndroidAppComponent::class.create(applicationContext)
-
-
+        val circuit = appComponent.circuit
 
         setContent {
             val backstack = rememberSaveableBackStack(HomeScreen)
             val navigator = rememberCircuitNavigator(backstack)
 
             MainNavigation(
-                circuit = appComponent.circuit,
+                circuit = circuit,
                 backstack = backstack,
                 navigator = navigator
             )
-
         }
     }
 }

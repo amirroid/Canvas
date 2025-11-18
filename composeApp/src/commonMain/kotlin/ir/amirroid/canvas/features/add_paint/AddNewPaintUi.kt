@@ -24,9 +24,6 @@ import canvas.composeapp.generated.resources.file
 import canvas.composeapp.generated.resources.name
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.ui.Ui
-import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
-import io.github.vinceglb.filekit.name
-import io.github.vinceglb.filekit.path
 import org.jetbrains.compose.resources.stringResource
 import software.amazon.lastmile.kotlin.inject.anvil.AppScope
 
