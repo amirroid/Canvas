@@ -7,12 +7,9 @@ androidx-activity = "1.11.0"
 androidx-appcompat = "1.7.1"
 androidx-core = "1.17.0"
 androidx-espresso = "3.7.0"
-androidx-lifecycle = "2.9.5"
 androidx-testExt = "1.3.0"
-# Have some issues with backstack state controlls
-#circuit = "0.31.0"
-circuit = "0.28.1"
-composeMultiplatform = "1.10.0-beta01"
+circuit = "0.31.0"
+composeMultiplatform = "1.9.3"
 filekitDialogsCompose = "0.12.0"
 junit = "4.13.2"
 kotlin = "2.2.21"
@@ -21,7 +18,7 @@ kotlinxSerializationJson = "1.9.0"
 kotlinxCollectionsImmutable = "0.4.0"
 ksp = "2.2.10-2.0.2"
 kotlin-anvil-inject = "0.1.6"
-materialKolor = "5.0.0-alpha02"
+materialKolor = "4.0.5"
 room = "2.8.3"
 sqlite = "2.6.1"
 
@@ -43,8 +40,6 @@ androidx-testExt-junit = { module = "androidx.test.ext:junit", version.ref = "an
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-espresso" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
-androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 anvil-runtime = { module = "software.amazon.lastmile.kotlin.inject.anvil:runtime", version.ref = "kotlin-anvil-inject" }
 anvil-runtime-optional = { module = "software.amazon.lastmile.kotlin.inject.anvil:runtime-optional", version.ref = "kotlin-anvil-inject" }
 anvil-compiler = { module = "software.amazon.lastmile.kotlin.inject.anvil:compiler", version.ref = "kotlin-anvil-inject" }

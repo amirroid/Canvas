@@ -16,11 +16,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -49,7 +48,6 @@ import software.amazon.lastmile.kotlin.inject.anvil.AppScope
 
 @CircuitInject(HomeScreen::class, AppScope::class)
 class HomeUi : Ui<HomeScreen.State> {
-    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     @Composable
     override fun Content(
         state: HomeScreen.State,
@@ -111,7 +109,6 @@ fun HomeContent(state: HomeScreen.State, modifier: Modifier = Modifier) {
 }
 
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PaintItem(
     paintWthDocument: PaintWithCanvasUiModel,
@@ -144,7 +141,7 @@ fun PaintItem(
                     when (currentCanvas) {
                         is CanvasLoadState.Loading -> {
                             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                LoadingIndicator()
+                                CircularProgressIndicator()
                             }
                         }
 

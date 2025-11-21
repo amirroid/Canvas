@@ -1,16 +1,14 @@
 package ir.amirroid.canvas.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.MotionScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.materialkolor.DynamicMaterialExpressiveTheme
+import com.materialkolor.DynamicMaterialTheme
 import com.materialkolor.rememberDynamicMaterialThemeState
 
 val SeedColor = Color(0xFFA1FF00)
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+//@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CanvasTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -21,10 +19,10 @@ fun CanvasTheme(
         seedColor = SeedColor,
     )
 
-    DynamicMaterialExpressiveTheme(
+    DynamicMaterialTheme(
         state = dynamicThemeState,
         animate = true,
         content = content,
-        motionScheme = MotionScheme.expressive()
+//        motionScheme = MotionScheme.expressive()
     )
 }
