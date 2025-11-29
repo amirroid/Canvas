@@ -15,16 +15,17 @@ import ir.amirroid.canvas.utils.annotations.CommonParcelize
 @CommonParcelize
 data class PaintScreen(val paintId: Long) : Screen {
     sealed class State(
+        val paintId: Long,
         val eventSink: (Event) -> Unit
     ) : CircuitUiState {
-        data object Loading : State({})
+        data class Loading(val id: Long) : State(id, {})
 
         @Immutable
         data class Success(
             val paintWithCanvasDocument: PaintWithCanvasDocument,
             val paintState: PaintState,
             private val eventSinkI: (Event) -> Unit
-        ) : State(eventSinkI)
+        ) : State(paintWithCanvasDocument.paint.id, eventSinkI)
     }
 
     sealed interface Event : CircuitUiEvent {

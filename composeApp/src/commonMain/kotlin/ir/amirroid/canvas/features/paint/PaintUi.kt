@@ -1,5 +1,6 @@
 package ir.amirroid.canvas.features.paint
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -52,6 +55,7 @@ import com.slack.circuit.overlay.ContentWithOverlays
 import com.slack.circuit.overlay.LocalOverlayHost
 import com.slack.circuit.overlay.OverlayHost
 import com.slack.circuit.runtime.ui.Ui
+import com.slack.circuit.sharedelements.SharedElementTransitionScope
 import com.slack.circuitx.overlays.DialogResult
 import com.slack.circuitx.overlays.alertDialogOverlay
 import ir.amirroid.canvas.domain.models.CanvasType
@@ -93,17 +97,31 @@ val canvasTypesWithIcons = listOf(
 
 @CircuitInject(PaintScreen::class, AppScope::class)
 class PaintUi : Ui<PaintScreen.State> {
+    @OptIn(ExperimentalSharedTransitionApi::class)
     @Composable
     override fun Content(
         state: PaintScreen.State,
         modifier: Modifier
-    ) {
-        ContentWithOverlays {
-            if (state is PaintScreen.State.Success) {
-                PaintContent(state, modifier)
-            }
-            if (state is PaintScreen.State.Loading || (state is PaintScreen.State.Success && state.paintState.isInitialized.not())) {
-                PaintLoadingContent()
+    ) = SharedElementTransitionScope {
+        ContentWithOverlays(
+            modifier = Modifier
+                .sharedBounds(
+                    rememberSharedContentState("paint_${state.paintId}"),
+                    animatedVisibilityScope = requireAnimatedScope(
+                        SharedElementTransitionScope.AnimatedScope.Navigation
+                    )
+                )
+        ) {
+            Surface(
+                color = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.onBackground,
+            ) {
+                if (state is PaintScreen.State.Success) {
+                    PaintContent(state, modifier)
+                }
+                if (state is PaintScreen.State.Loading || (state is PaintScreen.State.Success && state.paintState.isInitialized.not())) {
+                    PaintLoadingContent()
+                }
             }
         }
     }
@@ -112,7 +130,10 @@ class PaintUi : Ui<PaintScreen.State> {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun PaintContent(state: PaintScreen.State.Success, modifier: Modifier = Modifier) {
+fun PaintContent(
+    state: PaintScreen.State.Success,
+    modifier: Modifier = Modifier
+) {
     val paintState = state.paintState
     val eventSink = state.eventSink
 

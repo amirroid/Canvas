@@ -1,5 +1,6 @@
 package ir.amirroid.canvas.features.main
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -11,11 +12,13 @@ import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.runtime.Navigator
+import com.slack.circuit.sharedelements.SharedElementTransitionLayout
 import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
 //import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
 import ir.amirroid.canvas.ui.theme.CanvasTheme
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun <R : BackStack.Record> MainNavigation(
     circuit: Circuit,
@@ -30,16 +33,18 @@ fun <R : BackStack.Record> MainNavigation(
             CircuitCompositionLocals(
                 circuit = circuit
             ) {
-                NavigableCircuitContent(
-                    navigator = navigator,
-                    backStack = backstack,
-                    modifier = Modifier.fillMaxSize(),
-                    decoratorFactory = remember(navigator) {
-                        GestureNavigationDecorationFactory(
-                            onBackInvoked = navigator::pop
-                        )
-                    }
-                )
+                SharedElementTransitionLayout {
+                    NavigableCircuitContent(
+                        navigator = navigator,
+                        backStack = backstack,
+                        modifier = Modifier.fillMaxSize(),
+                        decoratorFactory = remember(navigator) {
+                            GestureNavigationDecorationFactory(
+                                onBackInvoked = navigator::pop
+                            )
+                        }
+                    )
+                }
             }
         }
     }

@@ -120,7 +120,7 @@ class PaintPresenter @Inject constructor(
                 )
             }
 
-            else -> PaintScreen.State.Loading
+            else -> PaintScreen.State.Loading(paintScreen.paintId)
         }
     }
 }

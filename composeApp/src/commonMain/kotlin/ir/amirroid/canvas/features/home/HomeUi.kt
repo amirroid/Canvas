@@ -1,6 +1,7 @@
 package ir.amirroid.canvas.features.home
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,7 @@ import canvas.composeapp.generated.resources.Res
 import canvas.composeapp.generated.resources.home
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.ui.Ui
+import com.slack.circuit.sharedelements.SharedElementTransitionScope
 import ir.amirroid.canvas.ui.components.paint.PaintBoard
 import ir.amirroid.canvas.ui.models.CanvasLoadState
 import ir.amirroid.canvas.ui.models.PaintWithCanvasUiModel
@@ -57,60 +59,62 @@ class HomeUi : Ui<HomeScreen.State> {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun HomeContent(state: HomeScreen.State, modifier: Modifier = Modifier) {
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    state.eventSink.invoke(HomeScreen.Event.NavigateToAddNewPaint)
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Add,
-                    contentDescription = null
-                )
-            }
-        },
-        modifier = modifier
-    ) {
-        Column {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(stringResource(Res.string.home))
-                }
-            )
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(12.dp)
-            ) {
-                items(state.paints, key = { it.paint.id }) { paintWthDocument ->
-                    PaintItem(
-                        paintWthDocument = paintWthDocument,
-                        onClick = {
-                            state.eventSink.invoke(HomeScreen.Event.ClickPaint(paintWthDocument.paint.id))
-                        },
-                        onLoadRequest = { size ->
-                            state.eventSink.invoke(
-                                HomeScreen.Event.LoadCanvasElements(
-                                    paintWthDocument.paint.id,
-                                    size
-                                )
-                            )
-                        }
+fun HomeContent(state: HomeScreen.State, modifier: Modifier = Modifier) =
+    SharedElementTransitionScope {
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {
+                        state.eventSink.invoke(HomeScreen.Event.NavigateToAddNewPaint)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Add,
+                        contentDescription = null
                     )
+                }
+            },
+            modifier = modifier
+        ) {
+            Column {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text(stringResource(Res.string.home))
+                    }
+                )
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(12.dp)
+                ) {
+                    items(state.paints, key = { it.paint.id }) { paintWthDocument ->
+                        PaintItem(
+                            paintWthDocument = paintWthDocument,
+                            onClick = {
+                                state.eventSink.invoke(HomeScreen.Event.ClickPaint(paintWthDocument.paint.id))
+                            },
+                            onLoadRequest = { size ->
+                                state.eventSink.invoke(
+                                    HomeScreen.Event.LoadCanvasElements(
+                                        paintWthDocument.paint.id,
+                                        size
+                                    )
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
     }
-}
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun PaintItem(
+fun SharedElementTransitionScope.PaintItem(
     paintWthDocument: PaintWithCanvasUiModel,
     onClick: () -> Unit,
     onLoadRequest: (boardSize: Size) -> Unit,
@@ -149,7 +153,13 @@ fun PaintItem(
                             PaintBoard(
                                 state = currentCanvas.paintState,
                                 onMotionEvent = {},
-                                gesturesEnabled = false
+                                gesturesEnabled = false,
+                                modifier = Modifier.sharedBounds(
+                                    rememberSharedContentState("paint_${paintWthDocument.paint.id}"),
+                                    animatedVisibilityScope = requireAnimatedScope(
+                                        SharedElementTransitionScope.AnimatedScope.Navigation
+                                    )
+                                )
                             )
                         }
                     }
